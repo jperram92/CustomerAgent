@@ -1,6 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
+import streamlit as st
 
 load_dotenv() # Load the environment variables
 
@@ -23,5 +24,27 @@ def run_flow(message: str) -> dict:
     response = requests.post(api_url, json=payload, headers=headers)
     return response.json()
 
-result = run_flow('What are the shipping times?')
-print(result)
+def main():
+    st.title("James Chat interface")
+
+    message = st.text_area("Enter your message", placeholder="Ask a question")
+
+    if st.button("Run Flow"):
+        if not message.strip():
+            st.error("Please enter a message")
+            return
+    try:
+        with st.spinner("Running the flow..."):
+            response = run_flow(message)
+        
+        response = response["outputs"][0]["outputs"][0]["results"]["message"]["text"]
+        st.markdown(response)
+    except Exception as e:
+        st.error(str(e))
+
+if __name__ == "__main__":
+    main()
+    
+
+#result = run_flow('What are the shipping times?')
+#print(result)
