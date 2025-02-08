@@ -5,6 +5,7 @@ from langchain.agents import initialize_agent, Tool
 from langchain.tools import StructuredTool
 from dotenv import load_dotenv
 import os
+from docx import Document  # Import for creating Word documents
 
 # Load environment variables from .env file
 load_dotenv()
@@ -157,6 +158,22 @@ def generate_summary_for_pm(inputs):
     print(f"\nGenerated Project Manager Summary:\n{summary}")
     return summary
 
+# Function to create a Word document from the summary
+def create_word_document(summary, filename="Project_Summary.docx"):
+    # Create a new Document object
+    doc = Document()
+    
+    # Add a title
+    doc.add_heading('Project Management Summary', 0)
+    
+    # Add the content from the summary
+    doc.add_paragraph(summary)
+    
+    # Save the document
+    doc.save(filename)
+    
+    print(f"\nWord document '{filename}' has been generated successfully!")
+
 # Create and initialize agent with tools
 tools = [
     Tool(func=gather_business_requirements, name="GatherBusinessRequirements", description="Gathers business requirements, user stories, and stakeholder information."),
@@ -197,3 +214,6 @@ print("\nFinal Summary for Project Manager: ")
 print(summary)
 
 print(output)
+
+# Create the Word document with the Project Manager summary
+create_word_document(summary)
