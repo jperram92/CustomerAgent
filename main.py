@@ -67,18 +67,19 @@ def main():
     # Title of the interface
     st.title("James Chat Interface")
 
-    # File upload feature
-    uploaded_file = st.file_uploader("Upload a file", type=["txt", "csv", "xlsx"])
+    # File upload feature with multiple file support
+    uploaded_files = st.file_uploader("Upload files", type=["txt", "csv", "xlsx"], accept_multiple_files=True)
     
-    if uploaded_file is not None:
-        # For example, reading a CSV file
-        if uploaded_file.type == "text/csv":
-            import pandas as pd
-            df = pd.read_csv(uploaded_file)
-            st.write("File contents:", df)
+    if uploaded_files:
+        for uploaded_file in uploaded_files:
+            # For example, reading a CSV file
+            if uploaded_file.type == "text/csv":
+                import pandas as pd
+                df = pd.read_csv(uploaded_file)
+                st.write(f"Contents of {uploaded_file.name}:", df)
 
-        # Add more file handling logic if necessary for other file types
-        st.success("File uploaded successfully!")
+            # Add more file handling logic if necessary for other file types
+            st.success(f"File {uploaded_file.name} uploaded successfully!")
 
     # Text area for user input with placeholder and styling
     message = st.text_area("Enter your message", placeholder="Ask a question", height=150)
